@@ -14,6 +14,8 @@ apiRouter.use('/loader/:script_id/:script_key', loaderLimiter);
 apiRouter.get("/loader/:script_id/:script_key", async (req, res, next) => {
     const scriptId = req.params.script_id;
     const authkey = req.params.script_key;
+    const test = req.get('Syn-User-Identifier');
+    console.log(test)
     const pool = await getPool().getConnection();
 
     const [rawScript, rawRows] = await pool.query(`SELECT * FROM script_storage WHERE script_id = '${scriptId}'`);

@@ -129,7 +129,11 @@ print("[LuaLock]: [3/4] > Connecting to licensing servers < [LuaLock]");
     
 wait(0.5);
 if apires == "UNAUTHENTICATED" then
-    return game.Players.LocalPlayer:Kick("Invalid Script Key, contact Support for further help!");
+    return game.Players.LocalPlayer:Kick("[LuaLock]: > Invalid Script Key, contact Support for further help! < [LuaLock]");
+end
+
+if apires == "" then
+   return print("[LuaLock]: > Script was not returned, contact the LuaLock Developer! < [LuaLock]");
 end
     
 print("[LuaLock]: [4/4] > Successfully authenticated to servers! < [LuaLock]");
