@@ -64,7 +64,7 @@ module.exports = {
             });
         } else {
             try{
-                await con.query(`DELETE FROM script_storage WHERE script_id = ${scriptId}`);
+                await con.query(`DELETE FROM script_storage WHERE script_id = ${scriptId} AND script_apiowner = '${userStorage[0].api_key}'`);
 
                 return await interaction.reply({
                     embeds: [
