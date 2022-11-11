@@ -14,11 +14,15 @@ apiRouter.use('/loader/:script_id/:script_key', loaderLimiter);
 apiRouter.get("/loader/:script_id/:script_key", async (req, res, next) => {
     const scriptId = req.params.script_id;
     const authkey = req.params.script_key;
-    const test = req.get('Syn-User-Identifier');
-    console.log(test)
+    const synHeader = req.get('Syn-User-Identifier');
+    const swHeader = req.get('Sw-User-Identifier');
     const pool = await getPool().getConnection();
 
     const [rawScript, rawRows] = await pool.query(`SELECT * FROM script_storage WHERE script_id = '${scriptId}'`);
+
+    if (!synHeader && !swHeader) {
+        return res.send("NOTAUTHORIZED");
+    }
 
     if (rawScript.length === 0) {
         return res.send("SCRIPTINVALID");

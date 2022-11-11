@@ -22,7 +22,7 @@ module.exports = {
     description: 'Get a script',
     options: [{
         name: 'scriptid',
-        description: 'The file you want to upload as your script.',
+        description: 'The ID of the script you want to fetch the loader for.',
         type: ApplicationCommandOptionType.String,
         required: true,
     }],

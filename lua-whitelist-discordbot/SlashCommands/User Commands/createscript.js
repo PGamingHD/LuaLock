@@ -138,6 +138,10 @@ if apires == "SCRIPTINVALID" then
     return print("[LuaLock]: > Something went wrong while executing the script, please contact the Developer ASAP! < [LuaLock]");
 end
 
+if apires == "NOTAUTHORIZED" then
+   return print("[LuaLock]: > No auth header was sent, is this executor supported by LuaLock? < [LuaLock]");
+end
+
 if apires == "Invalid Endpoint" then
     return print("[LuaLock]: > Failed to load, Invalid API Endpoint? < [LuaLock]")
 end
