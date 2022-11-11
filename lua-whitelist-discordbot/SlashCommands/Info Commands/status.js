@@ -26,6 +26,19 @@
             const after = Date.now();
             const msCalculated = after - before;
             const apiResponse = await axios.get('https://api.lualock.com/v1/status');
+            let apiLevel = "";
+
+            const [dbLevel, dbRows] = await con.query(`SELECT * FROM user_storage WHERE discord_connecteduser = '${interaction.user.id}'`);
+
+            if (dbLevel.length === 0) {
+                apiLevel = "None"
+            } else if (dbLevel[0].api_type === 0) {
+                apiLevel = "Vip"
+            } else if (dbLevel[0].api_type === 1) {
+                apiLevel = "Premium"
+            } else if (dbLevel[0].api_type === 2) {
+                apiLevel = "Pro"
+            }
 
             return await interaction.reply({
                 embeds: [
@@ -38,12 +51,11 @@
                     },{
                         name: 'API Response',
                         value: `\`\`\`yaml\n${apiResponse.data.Status}\`\`\``
+                    }, {
+                        name: 'Personal API Level',
+                        value: `\`\`\`yaml\n${apiLevel}\`\`\``
                     }])
                 ]
             })
-
-            console.log(apiResponse.data.Status)
-
-            console.log(msCalculated)
         }
     }
