@@ -1,0 +1,20 @@
+{
+   "CLIENT_PREFIX": "v!",
+   "DEVELOPER_IDS": ["266726434855321600"],
+   "BOT_CLIENTID": "1003056966706413689",
+   "BOT_VERSION": "v1.0.0",
+   "ADMIN_LOGS": "https://discord.com/api/webhooks/980167326898982973/7wIFw0ugZgaaJzDZ4zTlS0AAKkfzFlcCDqmaJ6BB2qkvCX3mBhHE2scnTREoYRdHzOSH",
+   "ENABLE_RATEWARNING": true,
+   "ENABLE_DEBUG": false,
+   "Discord_Dashboard": {
+      "Redirect_URI": "http://localhost/discord/callback",
+      "Redirect_CLIENTID": "1006527071973032006",
+      "Redirect_CLIENTSECRET": "xQGslfGocQXLJKrJXGLRG2zKs8PKZP0c",
+      "Dashboard_license": "07c8588f-3848-4b37-861f-9386898839ba"
+   },
+   "Discord_Links": {
+      "Support_Server": "https://discord.gg/comingsoon",
+      "invite_link_recommended": "https://discord.com/api/oauth2/authorize?client_id=1003056966706413689&permissions=517543939136&scope=bot%20applications.commands",
+      "invite_link_admin": "https://discord.com/api/oauth2/authorize?client_id=1003056966706413689&permissions=8&scope=bot%20applications.commands"
+   }
+}
