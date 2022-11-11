@@ -112,6 +112,10 @@ module.exports = {
         const loaderStart = 
 `local scriptId = "INSERTSCRIPTID";
 
+if not syn then
+    return print("[LuaLock]: > This project is only constructed to work on S^X at the moment, please wait for updates! < [LuaLock]")
+end
+
 if not script_key then
     return print("[LuaLock]: > No script Key was found, please add a script_key global variable to use auth with! < [LuaLock]");
 end
