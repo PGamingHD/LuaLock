@@ -14,7 +14,7 @@ const prettyMilliseconds = require('pretty-ms');
 const config = require('../../botconfig/config.json');
 const axios = require("axios");
 const {
-    generateSnowflake
+    generateKey
 } = require("../../handler/functions");
 const Luraph = require("luraph").Luraph;
 const api = new Luraph(process.env.LURAPH_API_TOKEN);
