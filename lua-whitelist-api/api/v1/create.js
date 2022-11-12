@@ -114,6 +114,14 @@ if apires == "SCRIPTINVALID" then
     return print("[LuaLock]: > Something went wrong while executing the script, please contact the Developer ASAP! < [LuaLock]");
 end
 
+if apires == "WHITELISTINGID" then
+    return print("[LuaLock]: > Whitelisting your executor ID, please re-execute the script again! < [LuaLock]");
+end
+
+if apires == "NOTCORRECTEXECUTOR" then
+    return print("[LuaLock]: > Invalid Executor ID, this script_key was whitelisted with another executor ID! Please contact the Script Owner to reset this ID. < [LuaLock]");
+end
+
 if apires == "NOTAUTHORIZED" then
    return print("[LuaLock]: > No auth header was sent, is this executor supported by LuaLock? < [LuaLock]");
 end

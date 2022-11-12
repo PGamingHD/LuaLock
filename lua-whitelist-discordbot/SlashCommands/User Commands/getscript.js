@@ -75,58 +75,5 @@ module.exports = {
             ],
             ephemeral: true
         });
-
-        if (userExists.length === 0) {
-            return await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setTitle(':x: Invalid Subscription :x:')
-                    .setDescription(`**Woops, it looks like you have not yet linked an API key to your account.**\n*Please contact support if you think this is wrong.*`)
-                    .setColor(ee.errorColor)
-                ],
-                ephemeral: true
-            });
-        }
-
-        if (scriptFile.length > 100) {
-            return await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setTitle(':x: Invalid Name :x:')
-                    .setDescription(`**Woops, it looks like the name you entered is too long. (Max 100 characters)**\n*Please contact support if you think this is wrong.*`)
-                    .setColor(ee.errorColor)
-                ],
-                ephemeral: true
-            });
-        }
-
-        const apiOwner = userExists[0].api_key;
-
-        const response = await axios.get(scriptFile.attachment);
-
-        const FILE = Buffer.from(response.data, 'utf8').toString('hex');
-
-        const scriptID = generateSnowflake();
-
-        if (FILE) {
-            await con.query(`INSERT INTO script_storage (script_id,script,script_apiowner,script_name) VALUES (${scriptID},x'${FILE}','${apiOwner}','${scriptName}')`);
-        }
-
-        return await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                .setColor(ee.color)
-                .setTitle(`:white_check_mark: Generated Script :white_check_mark:`)
-                .setDescription(`**The script was successfully generated!**\n*Please contact support if you're having any issues with the script.*`)
-                .addFields([{
-                    name: 'Script ID',
-                    value: `\`${scriptID}\``
-                }, {
-                    name: 'Script name',
-                    value: `\`${scriptName}\``
-                }])
-            ],
-            ephemeral: true
-        });
     }
 }

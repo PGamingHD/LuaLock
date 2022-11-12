@@ -27,6 +27,11 @@
                 description: 'The ID of the script you want to generate a key for.',
                 type: ApplicationCommandOptionType.String,
                 required: true
+            }, {
+                name: 'keynote',
+                description: 'Add a key note that can be used to identify different keys.',
+                type: ApplicationCommandOptionType.String,
+                required: true
             }]
         }, {
             name: 'blacklist',
@@ -49,7 +54,22 @@
             type: ApplicationCommandOptionType.Subcommand,
             options: [{
                 name: 'scriptid',
-                description: 'The ID of the script you want to generate a key for.',
+                description: 'The ID of the script you want to get all keys for.',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            }]
+        }, {
+            name: 'getone',
+            description: 'Get one of your Script Keys for a specific script',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [{
+                name: 'scriptid',
+                description: 'The ID of the script you want get a key for.',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            }, {
+                name: 'scriptkey',
+                description: 'The Script Key you want to find information about.',
                 type: ApplicationCommandOptionType.String,
                 required: true
             }]
@@ -63,6 +83,7 @@
 
             if (interaction.options.getSubcommand() === "whitelist") {
                 const scriptId = interaction.options.getString('scriptid');
+                const keyNote = interaction.options.getString('keynote');
 
                 const [userStorage, userRows] = await con.query(`SELECT * FROM user_storage WHERE discord_connecteduser = ${interaction.user.id}`);
     
@@ -72,6 +93,18 @@
                             new EmbedBuilder()
                             .setTitle(':x: Invalid Subscription :x:')
                             .setDescription(`**Woops, it looks like you have not yet linked an API key to your account.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        ephemeral: true
+                    });
+                }
+
+                if (keyNote.length < 2 || keyNote.length > 100) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: Invalid Note Length :x:')
+                            .setDescription(`**Woops, it looks like you entered a note that is over 100 characters long or below 2 characters.**\n*Please contact support if you think this is wrong.*`)
                             .setColor(ee.errorColor)
                         ],
                         ephemeral: true
@@ -93,7 +126,7 @@
                 } else {
                     try {
                         const genedKey = generateKey()
-                        await con.query(`UPDATE script_storage SET script_keys = JSON_ARRAY_APPEND(script_keys,'$',CAST('{"scriptkey": "${genedKey}"}' AS JSON)) WHERE script_id = '${scriptId}' AND script_apiowner = '${userStorage[0].api_key}'`);
+                        await con.query(`UPDATE script_storage SET script_keys = JSON_ARRAY_APPEND(script_keys,'$',CAST('{"scriptkey": "${genedKey}", "allowed-id": "0", "note": "${keyNote}"}' AS JSON)) WHERE script_id = '${scriptId}' AND script_apiowner = '${userStorage[0].api_key}'`);
                         
                         return await interaction.reply({
                             embeds: [
@@ -263,6 +296,78 @@
                             ephemeral: true
                         });
                     }
+                }
+            }
+
+            if (interaction.options.getSubcommand() === "getone") {
+                const scriptId = interaction.options.getString('scriptid');
+                const scriptKey = interaction.options.getString('scriptkey');
+
+                const [userStorage, userRows] = await con.query(`SELECT * FROM user_storage WHERE discord_connecteduser = ${interaction.user.id}`);
+    
+                if (userStorage.length === 0) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: Invalid Subscription :x:')
+                            .setDescription(`**Woops, it looks like you have not yet linked an API key to your account.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        ephemeral: true
+                    });
+                }
+
+                const [script, scriptRows] = await con.query(`SELECT * FROM script_storage WHERE script_id = '${scriptId}' AND script_apiowner = '${userStorage[0].api_key}'`);
+
+                if (script.length === 0) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: Invalid Script ID :x:')
+                            .setDescription(`**Woops, it looks like that script was not found. Is that a valid ID and are you the owner?**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        ephemeral: true
+                    });
+                } else {
+                    const [search, searching] = await con.query(`SELECT JSON_SEARCH('${JSON.stringify(script[0].script_keys)}', 'one', '${scriptKey}')`);
+
+                    if (search.length === 0) {
+                        return await interaction.reply({
+                            embeds: [
+                                new EmbedBuilder()
+                                .setTitle(':x: Invalid Script Key :x:')
+                                .setDescription(`**Woops, it looks like that script key was not found, is the key correct?**\n*Please contact support if you think this is wrong.*`)
+                                .setColor(ee.errorColor)
+                            ],
+                            ephemeral: true
+                        });
+                    }
+
+                    const keyPlace = Object.values(search[0])[0].split('.')[0];
+                    const [specificKey, testing2] = await con.query(`SELECT JSON_EXTRACT('${JSON.stringify(script[0].script_keys)}', '${keyPlace}')`);
+                    const allowedId = Object.values(specificKey[0])[0]['allowed-id'];
+                    const scriptNote = Object.values(specificKey[0])[0]['note'];
+
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':white_check_mark: Key Information :white_check_mark:')
+                            .setDescription(`**Display Key Information below!**`)
+                            .addFields([{
+                                name: 'Script Key',
+                                value: `\`${scriptKey}\``
+                            },{
+                                name: 'Whitelisted Executor ID',
+                                value: `\`${allowedId}\``
+                            }, {
+                                name: 'Key Note',
+                                value: `\`${scriptNote}\``
+                            }])
+                            .setColor(ee.color)
+                        ],
+                        ephemeral: true
+                    });
                 }
             }
         }
