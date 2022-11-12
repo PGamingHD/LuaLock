@@ -173,7 +173,7 @@ return loadstring(apires)();`
                script executions that has been licensed with Lualock.
                     
                    LuaLock v1 for Roblox, made by PGamingHD#0666
-                              https://lualock.org/
+                              https://lualock.com/
 
             
               ██╗░░░░░██╗░░░██╗░█████╗░██╗░░░░░░█████╗░░█████╗░██╗░░██╗
