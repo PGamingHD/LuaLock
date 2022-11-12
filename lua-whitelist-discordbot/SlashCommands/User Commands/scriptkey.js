@@ -380,7 +380,7 @@
                 }
             }
 
-            if (interaction.options.getSubcommand() === "getone") {
+            if (interaction.options.getSubcommand() === "resetid") {
                 const scriptId = interaction.options.getString('scriptid');
                 const scriptKey = interaction.options.getString('scriptkey');
 
@@ -427,11 +427,10 @@
 
                     const keyPlace = Object.values(search[0])[0].split('.')[0];
                     const [specificKey, testing2] = await con.query(`SELECT JSON_EXTRACT('${JSON.stringify(script[0].script_keys)}', '${keyPlace}')`);
-                    const allowedId = Object.values(specificKey[0])[0]['allowed-id'];
                     const scriptNote = Object.values(specificKey[0])[0]['note'];
 
                     try {
-                        await con.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(script[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${scriptKey}", "allowed-id": "${allowedId}", "note": "${scriptNote}"}' AS JSON));`);
+                        await con.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(script[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${scriptKey}", "allowed-id": "0", "note": "${scriptNote}"}' AS JSON));`);
 
                         return await interaction.reply({
                             embeds: [
