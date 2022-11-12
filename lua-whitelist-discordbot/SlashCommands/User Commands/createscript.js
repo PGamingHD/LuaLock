@@ -113,10 +113,6 @@ module.exports = {
         const loaderStart = 
 `local scriptId = "INSERTSCRIPTID";
 
-if not syn then
-    return print("[LuaLock]: > This project is only constructed to work on S^X at the moment, please wait for updates! < [LuaLock]")
-end
-
 if not script_key then
     return print("[LuaLock]: > No script Key was found, please add a script_key global variable to use auth with! < [LuaLock]");
 end
@@ -125,13 +121,23 @@ print("[LuaLock]: [1/4] > Authenticating to servers... < [LuaLock]");
 
 wait(1)
 
-local Response = syn.request({
-    Url = "https://api.lualock.com/v1/auth/loader/" ..scriptId.. "/" ..script_key,
-    Method = "GET",
-    headers = {
-        ["Content-Type"] = "application/json"
-    },
-});
+local Response = nil;
+
+if syn then
+    Response = syn.request({
+       Url = "https://api.lualock.com/v1/auth/loader/" ..scriptId.. "/" ..script_key,
+       Method = "GET",
+       headers = {
+           ["Content-Type"] = "application/json"
+        }
+    });
+elseif KRNL_LOADED then
+    Response = request({
+        Url = "https://api.lualock.com/v1/auth/loader/" ..scriptId.. "/" ..script_key,
+        Method = "GET",
+        headers = {}
+    });
+end
 
 local apires = Response.Body;
 
@@ -144,7 +150,7 @@ if apires == "WHITELISTINGID" then
 end
 
 if apires == "NOTCORRECTEXECUTOR" then
-    return print("[LuaLock]: > Invalid Executor ID, this script_key was whitelisted with another executor ID! Please contact the Script Owner to reset this ID. < [LuaLock]");
+    return print("[LuaLock]: > Invalid Executor ID, this script_key was whitelisted with another executor ID! < [LuaLock]");
 end
 
 if apires == "NOTAUTHORIZED" then
