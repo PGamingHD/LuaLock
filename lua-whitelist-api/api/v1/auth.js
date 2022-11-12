@@ -24,16 +24,17 @@ apiRouter.get("/loader/:script_id/:script_key", async (req, res, next) => {
     const keyPlace = Object.values(search[0])[0].split('.')[0];
     const [testing, testing2] = await pool.query(`SELECT JSON_EXTRACT('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}')`);
     const allowedId = Object.values(testing[0])[0]['allowed-id'];
+    const scriptNote = Object.values(testing[0])[0]['note'];
 
     if (!synHeader && !swHeader) {
         return res.send("NOTAUTHORIZED");
     }
 
     if (allowedId === "0" && synHeader) {
-        await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${authkey}", "allowed-id": "${synHeader}"}' AS JSON));`);
+        await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${authkey}", "allowed-id": "${synHeader}", "note": "${scriptNote}"}' AS JSON));`);
         return res.send("WHITELISTINGID");
     } else if (allowedId === "0" && swHeader) {
-        await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${authkey}", "allowed-id": "${swHeader}"}' AS JSON));`);
+        await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${authkey}", "allowed-id": "${swHeader}", "note": "${scriptNote}"}' AS JSON));`);
         return res.send("WHITELISTINGID");
     }
 

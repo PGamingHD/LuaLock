@@ -23,8 +23,8 @@ client.on("interactionCreate", async (interaction) => {
             });
         }
 
-        if (client.commandCooldown.has(`${interaction.user.id},${cmd.name}`)) {
-            const usercd = await client.commandCooldown.get(`${interaction.user.id},${cmd.name}`);
+        if (client.commandCooldown.has(`${interaction.user.id}`)) {
+            const usercd = await client.commandCooldown.get(`${interaction.user.id}`);
             let prettified = prettyMilliseconds(usercd - Date.now(), {
                 verbose: true
             });
@@ -33,7 +33,7 @@ client.on("interactionCreate", async (interaction) => {
                 embeds: [
                     new EmbedBuilder()
                     .setColor(ee.errorColor)
-                    .setDescription(`**Woops, looks like you are on a cooldown for this command for another *${prettified}*!**`)
+                    .setDescription(`**Woops, looks like you are on a cooldown for another *${prettified}*!**`)
                 ],
                 ephemeral: true
             })
@@ -53,10 +53,10 @@ client.on("interactionCreate", async (interaction) => {
 
         if (cmd?.commandCooldown) {
             let expireDate = Date.now() + 1000 * cmd?.commandCooldown;
-            await client.commandCooldown.set(`${interaction.user.id},${cmd.name}`, expireDate);
+            await client.commandCooldown.set(`${interaction.user.id}`, expireDate);
 
             setTimeout(async () => {
-                await client.commandCooldown.delete(`${interaction.user.id},${cmd.name}`);
+                await client.commandCooldown.delete(`${interaction.user.id}`);
             }, 1000 * cmd?.commandCooldown);
         }
 

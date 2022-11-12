@@ -73,6 +73,21 @@
                 type: ApplicationCommandOptionType.String,
                 required: true
             }]
+        }, {
+            name: 'resetid',
+            description: 'Reset executor ID of someone, this will allow them to change executor/account!',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [{
+                name: 'scriptid',
+                description: 'The ID of the script you want reset id for.',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            }, {
+                name: 'scriptkey',
+                description: 'The Script Key you want to reset id for.',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            }]
         }],
         /** 
          * @param {Client} client 
@@ -227,12 +242,6 @@
                         ephemeral: true
                     });
                 }
-                //const [search, searching] = await con.query(`SELECT * FROM script_storage`);
-
-                //await con.query(`SELECT script_storage.script_keys AS before_remove, JSON_REMOVE(script_keys, JSON_UNQUOTE(JSON_EXTRACT(JSON_SEARCH('${JSON.stringify(script[0].script_keys)}', 'all', '{"scriptkey": "lualock-ad2e4165f8d91ccde706f571e3e443f6"}'))))`
-                //const [test, test2] = await con.query(`UPDATE script_storage SET script_keys = JSON_REMOVE(script_keys, JSON_UNQUOTE(JSON_SEARCH(script_keys, 'one', 'lualock-516b283e909f3bd79a0034655a64d8a5'))) WHERE JSON_SEARCH(script_keys, 'one', 'lualock-516b283e909f3bd79a0034655a64d8a5') IS NOT NULL;`);
-                //console.log(test)
-                //await con.query(`UPDATE script_storage AS s SET script_keys = JSON_REMOVE(s.script_keys, JSON_UNQUOTE(JSON_search(s.script_keys, 'one', '${scriptKey}')))`)
             }
 
             if (interaction.options.getSubcommand() === "getall") {
@@ -368,6 +377,91 @@
                         ],
                         ephemeral: true
                     });
+                }
+            }
+
+            if (interaction.options.getSubcommand() === "getone") {
+                const scriptId = interaction.options.getString('scriptid');
+                const scriptKey = interaction.options.getString('scriptkey');
+
+                const [userStorage, userRows] = await con.query(`SELECT * FROM user_storage WHERE discord_connecteduser = ${interaction.user.id}`);
+    
+                if (userStorage.length === 0) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: Invalid Subscription :x:')
+                            .setDescription(`**Woops, it looks like you have not yet linked an API key to your account.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        ephemeral: true
+                    });
+                }
+
+                const [script, scriptRows] = await con.query(`SELECT * FROM script_storage WHERE script_id = '${scriptId}' AND script_apiowner = '${userStorage[0].api_key}'`);
+
+                if (script.length === 0) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: Invalid Script ID :x:')
+                            .setDescription(`**Woops, it looks like that script was not found. Is that a valid ID and are you the owner?**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        ephemeral: true
+                    });
+                } else {
+                    const [search, searching] = await con.query(`SELECT JSON_SEARCH('${JSON.stringify(script[0].script_keys)}', 'one', '${scriptKey}')`);
+
+                    if (search.length === 0) {
+                        return await interaction.reply({
+                            embeds: [
+                                new EmbedBuilder()
+                                .setTitle(':x: Invalid Script Key :x:')
+                                .setDescription(`**Woops, it looks like that script key was not found, is the key correct?**\n*Please contact support if you think this is wrong.*`)
+                                .setColor(ee.errorColor)
+                            ],
+                            ephemeral: true
+                        });
+                    }
+
+                    const keyPlace = Object.values(search[0])[0].split('.')[0];
+                    const [specificKey, testing2] = await con.query(`SELECT JSON_EXTRACT('${JSON.stringify(script[0].script_keys)}', '${keyPlace}')`);
+                    const allowedId = Object.values(specificKey[0])[0]['allowed-id'];
+                    const scriptNote = Object.values(specificKey[0])[0]['note'];
+
+                    try {
+                        await con.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(script[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${scriptKey}", "allowed-id": "${allowedId}", "note": "${scriptNote}"}' AS JSON));`);
+
+                        return await interaction.reply({
+                            embeds: [
+                                new EmbedBuilder()
+                                .setTitle(':white_check_mark: Successfully Reset Executor Identifier :white_check_mark:')
+                                .setDescription(`**I successfully reset the Executor Identifier of the provided Script Key.**\n*Please contact support if you think this is wrong.*`)
+                                .addFields([{
+                                    name: 'Script ID',
+                                    value: `\`${scriptId}\``
+                                }, {
+                                    name: 'Script Key',
+                                    value: `\`${scriptKey}\``
+                                }])
+                                .setColor(ee.color)
+                            ],
+                            ephemeral: true
+                        });
+                    } catch (error) {
+                        console.log("Could not reset executor identifier: ", error)
+
+                        return await interaction.reply({
+                            embeds: [
+                                new EmbedBuilder()
+                                .setTitle(':x: Successfully Reset Executor Identifier :x:')
+                                .setDescription(`**I could not reset the Executor Identifier from the Database, please contact the LuaLock Developer ASAP!**\n*Please contact support if you think this is wrong.*`)
+                                .setColor(ee.errorColor)
+                            ],
+                            ephemeral: true
+                        });
+                    }
                 }
             }
         }
