@@ -15,6 +15,7 @@
     module.exports = {
         name: 'status',
         description: 'Get API Status & Bot Status!',
+        commandCooldown: 15,
         /** 
          * @param {Client} client 
          * @param {Message} message 

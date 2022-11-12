@@ -15,6 +15,7 @@
     module.exports = {
         name: 'login',
         description: 'Login and link an existing API key to your Discord Account.',
+        commandCooldown: 60,
         options: [{
             name: 'apikey',
             description: 'The API key you want to link to this account.',

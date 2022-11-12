@@ -18,6 +18,7 @@ const {
 module.exports = {
     name: 'redeem',
     description: 'Redeem one of your purchase license keys for a valid API key.',
+    commandCooldown: 60,
     options: [{
         name: 'type',
         description: 'The key type you want to redeem',

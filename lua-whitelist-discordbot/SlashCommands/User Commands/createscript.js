@@ -22,6 +22,7 @@ const api = new Luraph(process.env.LURAPH_API_TOKEN);
 module.exports = {
     name: 'createscript',
     description: 'Create a script',
+    commandCooldown: 30,
     options: [{
         name: 'scriptfile',
         description: 'The file you want to upload as your script.',

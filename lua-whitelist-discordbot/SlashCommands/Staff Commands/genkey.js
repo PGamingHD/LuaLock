@@ -19,7 +19,7 @@
         name: 'genkey',
         description: 'Generate a key with a specific subscription type.',
         DeveloperCommand: true,
-        required: true,
+        commandCooldown: 15,
         options: [{
             name: 'type',
             description: 'The type of key you want to generate.',

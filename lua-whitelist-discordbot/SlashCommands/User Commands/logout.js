@@ -15,6 +15,7 @@ const config = require('../../botconfig/config.json');
 module.exports = {
     name: 'logout',
     description: 'Unlink an existing API Key from a linked account.',
+    commandCooldown: 60,
     options: [{
         name: 'apikey',
         description: 'The API key you want to unlink from this account.',

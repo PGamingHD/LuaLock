@@ -20,6 +20,7 @@ const {
 module.exports = {
     name: 'scripts',
     description: 'Get all your owned scripts',
+    commandCooldown: 15,
     /** 
      * @param {Client} client 
      * @param {Message} message 
@@ -41,8 +42,6 @@ module.exports = {
         }
 
         const apiO = apiOwner[0];
-
-
 
         const [ownedScripts, ownedRows] = await con.query(`SELECT * FROM script_storage WHERE script_apiowner = '${apiO.api_key}'`);
 

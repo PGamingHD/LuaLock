@@ -20,6 +20,7 @@ const {
 module.exports = {
     name: 'getscript',
     description: 'Get a script',
+    commandCooldown: 10,
     options: [{
         name: 'scriptid',
         description: 'The ID of the script you want to fetch the loader for.',

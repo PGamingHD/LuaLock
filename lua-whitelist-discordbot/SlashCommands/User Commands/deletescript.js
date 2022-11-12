@@ -22,6 +22,7 @@ const api = new Luraph(process.env.LURAPH_API_TOKEN);
 module.exports = {
     name: 'deletescript',
     description: 'Delete an existing script',
+    commandCooldown: 30,
     options: [{
         name: 'scriptid',
         description: 'The file you want to upload as your script.',
