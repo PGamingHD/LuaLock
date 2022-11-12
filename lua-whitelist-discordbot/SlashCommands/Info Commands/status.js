@@ -56,7 +56,8 @@
                         name: 'Personal API Level',
                         value: `\`\`\`yaml\n${apiLevel}\`\`\``
                     }])
-                ]
+                ],
+                ephemeral: true
             })
         }
     }
