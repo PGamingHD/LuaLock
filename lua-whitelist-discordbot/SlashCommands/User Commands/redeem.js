@@ -86,7 +86,7 @@ module.exports = {
                     return;
                 }
 
-                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_totalkeys) VALUES ('${generatedAPIKey}', '${expirationTime}', 2, 999999999, 10, 0)`);
+                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_expired) VALUES ('${generatedAPIKey}', '${expirationTime}', 2, 999999999, 10, 0)`);
                 await con.query(`DELETE FROM prokeys WHERE licensekey = '${licenseKey}'`);
                 return;
             } else {
@@ -139,7 +139,7 @@ module.exports = {
                     return;
                 }
 
-                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_totalkeys) VALUES ('${generatedAPIKey}', '${expirationTime}', 1, 500, 5, 0)`);
+                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_expired) VALUES ('${generatedAPIKey}', '${expirationTime}', 1, 500, 5, 0)`);
                 await con.query(`DELETE FROM premiumkeys WHERE licensekey = '${licenseKey}'`);
             } else {
                 await interaction.reply({
@@ -191,7 +191,7 @@ module.exports = {
                     return;
                 }
 
-                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_totalkeys) VALUES ('${generatedAPIKey}', '${expirationTime}', 0, 100, 1, 0)`);
+                await con.query(`INSERT INTO user_storage (api_key,api_expirytime,api_type,api_obfuscationsleft,api_scriptsleft,api_expired) VALUES ('${generatedAPIKey}', '${expirationTime}', 0, 100, 1, 0)`);
                 await con.query(`DELETE FROM vipkeys WHERE licensekey = '${licenseKey}'`);
             } else {
                 await interaction.reply({

@@ -26,6 +26,21 @@ apiRouter.get("/:scriptid", async (req, res, next) => {
             "message": "Invalid API Key."
         })
     }
+
+    if (apiKeyInfo[0].api_expirytime < Date.now() && !apiKeyInfo[0].api_expired) {
+        await pool.query(`UPDATE user_storage SET api_expired = 1 WHERE api_key = '${apiKey}'`);
+
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
+    if (apiKeyInfo[0].api_expired) {
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
     if (script.length === 0) {
         return res.status(500).json({
             "message": "Failed to find the script with that ID!",

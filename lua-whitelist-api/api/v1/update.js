@@ -36,9 +36,29 @@ apiRouter.put("/script/:script_id", async (req, res, next) => {
         });
     }
 
+    if (apiKeyInfo[0].api_expirytime < Date.now() && !apiKeyInfo[0].api_expired) {
+        await pool.query(`UPDATE user_storage SET api_expired = 1 WHERE api_key = '${apiKey}'`);
+
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
+    if (apiKeyInfo[0].api_expired) {
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
     if (scriptA.length === 0) {
         return res.status(500).json({
             "message": "Invalid Script ID"
+        });
+    }
+
+    if (scriptA[0].api_obfuscationsleft === 0) {
+        return res.status(500).json({
+            "message": "Reached max amount of obfuscations allowed this month"
         });
     }
 
@@ -78,7 +98,7 @@ apiRouter.put("/script/:script_id", async (req, res, next) => {
     or internal logic will result in a global ban, and get you blacklisted from future
                script executions that has been licensed with Lualock.
                     
-                   LuaLock v1 for Roblox, made by PGamingHD#0666
+                   LuaLock v1.1 for Roblox, made by PGamingHD#0666
                               https://lualock.org/
 
             
@@ -96,12 +116,13 @@ apiRouter.put("/script/:script_id", async (req, res, next) => {
 
 `;
 
-        actualScript = script + data.split("\n")[2].toString();
+        const actualScript = script + data.split("\n")[2].toString();
 
         const FILE = Buffer.from(actualScript, 'utf8').toString('hex');
 
         if (FILE) {
             await pool.query(`UPDATE script_storage SET script = x'${FILE}' WHERE script_id = ${scriptId}`);
+            await pool.query(`UPDATE user_storage SET api_obfuscationsleft = api_obfuscationsleft - 1 WHERE api_key = '${apiKey}'`);
         } else {
             return res.status(500).json({
                 "message": "Something went wrong with the Database, please contact the Developer to fix this",

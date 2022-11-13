@@ -35,6 +35,20 @@ apiRouter.delete("/script/:script_id", async (req, res, next) => {
         });
     }
 
+    if (apiKeyInfo[0].api_expirytime < Date.now() && !apiKeyInfo[0].api_expired) {
+        await pool.query(`UPDATE user_storage SET api_expired = 1 WHERE api_key = '${apiKey}'`);
+
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
+    if (apiKeyInfo[0].api_expired) {
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
     if (script.length === 0) {
         return res.status(400).json({
             "message": "Invalid Script ID"
@@ -43,6 +57,7 @@ apiRouter.delete("/script/:script_id", async (req, res, next) => {
 
     try {
         await pool.query(`DELETE FROM script_storage WHERE script_id = ${scriptId}`);
+        await pool.query(`UPDATE user_storage SET api_scriptsleft = api_scriptsleft + 1 WHERE api_key = '${apiKey}'`);
     } catch (error) {
         console.log(error)
         return res.status(500).json({

@@ -23,6 +23,8 @@ Websocket:Send("INITIATEAUTHENTICATION," ..scriptId.. ",NONE");
 Websocket.OnMessage:Connect(function(Msg)
     if Msg == "INVALIDSCRIPTID" then
         return print("[LuaLock]: > That specific script could not be found, please contact the LuaLock Developer! < :[LuaLock]");
+    elseif Msg == "EXPIREDAPIKEYOWNER" then
+        return print("[LuaLock]: > This script has expired, please contact the Script Owner to renew it. < :[LuaLock]");
     elseif Msg == "VALIDSCRIPTID" then
         print("[LuaLock]: [2/5] > Confirming valid connection... < :[LuaLock]");
         

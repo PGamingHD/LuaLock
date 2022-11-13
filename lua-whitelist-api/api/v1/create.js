@@ -37,6 +37,20 @@ apiRouter.post("/script", async (req, res, next) => {
         });
     }
 
+    if (apiKeyInfo[0].api_expirytime < Date.now() && !apiKeyInfo[0].api_expired) {
+        await pool.query(`UPDATE user_storage SET api_expired = 1 WHERE api_key = '${apiKey}'`);
+
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
+    if (apiKeyInfo[0].api_expired) {
+        return res.status(401).json({
+            "message": "API Key expired."
+        });
+    }
+
     if (!script || !platform || !scriptName) {
         return res.status(400).json({
             "message": "Missing Parameters"
@@ -56,21 +70,18 @@ apiRouter.post("/script", async (req, res, next) => {
     }
 
     const apiOwner = apiKeyInfo[0].api_key;
+    const scriptsLeft = apiKeyInfo[0].api_scriptsleft;
+    const obfuscationsLeft = apiKeyInfo[0].api_obfuscationsleft;
 
-    const [scriptsCount, scriptsRows] = await pool.query(`SELECT COUNT(*) FROM script_storage WHERE script_apiowner = '${apiKeyInfo[0].api_key}'`);
-
-    let maxScripts = 0;
-    if (apiKeyInfo[0].api_type === 0) {
-        maxScripts = 1;
-    } else if (apiKeyInfo[0].api_type === 1) {
-        maxScripts = 5;
-    } else if (apiKeyInfo[0].api_type === 2) {
-        maxScripts = 10;
-    }
-
-    if (scriptsCount[0]['COUNT(*)'] >= maxScripts) {
+    if (scriptsLeft === 0) {
         return res.status(500).json({
             "message": "Reached max amount of scripts allowed"
+        });
+    }
+
+    if (obfuscationsLeft === 0) {
+        return res.status(500).json({
+            "message": "Reached max amount of obfuscations allowed this month"
         });
     }
 
@@ -213,6 +224,8 @@ end);`
 
         if (FILE && LOADER_FILE) {
             await pool.query(`INSERT INTO script_storage (script_id,script,script_apiowner,script_name,script_keys,loader_script) VALUES (${scriptID},x'${FILE}','${apiOwner}','${scriptName}','[]',x'${LOADER_FILE}')`);
+            await pool.query(`UPDATE user_storage SET api_scriptsleft = api_scriptsleft - 1 WHERE api_key = '${apiKeyInfo[0].api_key}'`);
+            await pool.query(`UPDATE user_storage SET api_obfuscationsleft = api_obfuscationsleft - 1 WHERE api_key = '${apiKeyInfo[0].api_key}'`);
         } else {
             return res.status(500).json({
                 "message": "Something went wrong with the Database, please contact the Developer to fix this",

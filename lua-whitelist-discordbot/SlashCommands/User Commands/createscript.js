@@ -58,6 +58,34 @@ module.exports = {
             });
         }
 
+        if (userExists[0].api_expirytime < Date.now() && !userExists[0].api_expired) {
+            await con.query(`UPDATE user_storage SET api_expired = 1 WHERE discord_connecteduser = '${interaction.user.id}'`);
+
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(':x: API Key Expired :x:')
+                    .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                    .setColor(ee.errorColor)
+                ],
+                content: '',
+                ephemeral: true
+            });
+        }
+
+        if (userExists[0].api_expired) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(':x: API Key Expired :x:')
+                    .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                    .setColor(ee.errorColor)
+                ],
+                content: '',
+                ephemeral: true
+            });
+        }
+
         if (scriptFile.length > 100) {
             return await interaction.editReply({
                 embeds: [
@@ -72,24 +100,28 @@ module.exports = {
         }
 
         const apiOwner = userExists[0].api_key;
-
-        const [scriptsCount, scriptsRows] = await con.query(`SELECT COUNT(*) FROM script_storage WHERE script_apiowner = '${apiOwner}'`);
-
-        let maxScripts = 0;
-        if (userExists[0].api_type === 0) {
-            maxScripts = 1;
-        } else if (userExists[0].api_type === 1) {
-            maxScripts = 5;
-        } else if (userExists[0].api_type === 2) {
-            maxScripts = 10;
-        }
+        const scriptsLeft = userExists[0].api_scriptsleft;
+        const obfuscationsLeft = userExists[0].api_obfuscationsleft;
     
-        if (scriptsCount[0]['COUNT(*)'] >= maxScripts) {
+        if (scriptsLeft === 0) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                     .setTitle(':x: Reached Max Scripts :x:')
                     .setDescription(`**Woops, it looks like you have reached the maximum amount of scripts allowed for your subscription type.**\n*Please contact support if you think this is wrong.*`)
+                    .setColor(ee.errorColor)
+                ],
+                content: '',
+                ephemeral: true
+            });
+        }
+
+        if (obfuscationsLeft === 0) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(':x: Out Of Obfuscations :x:')
+                    .setDescription(`**Woops, it looks like you have ran out of obfuscations left this month.**\n*Please contact support if you think this is wrong.*`)
                     .setColor(ee.errorColor)
                 ],
                 content: '',
@@ -236,6 +268,8 @@ end);`
 
             if (FILE && LOADER_FILE) {
                 await con.query(`INSERT INTO script_storage (script_id,script,script_apiowner,script_name,script_keys,loader_script) VALUES (${scriptID},x'${FILE}','${apiOwner}','${scriptName}','[]',x'${LOADER_FILE}')`);
+                await con.query(`UPDATE user_storage SET api_scriptsleft = api_scriptsleft - 1 WHERE discord_connecteduser = '${interaction.user.id}'`);
+                await con.query(`UPDATE user_storage SET api_obfuscationsleft = api_obfuscationsleft - 1 WHERE discord_connecteduser = '${interaction.user.id}'`);
             }
 
             return await interaction.editReply({

@@ -114,6 +114,19 @@
                     });
                 }
 
+                if (userStorage[0].api_expired) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: API Key Expired :x:')
+                            .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        content: '',
+                        ephemeral: true
+                    });
+                }
+
                 if (keyNote.length < 2 || keyNote.length > 100) {
                     return await interaction.reply({
                         embeds: [
@@ -194,6 +207,19 @@
                     });
                 }
 
+                if (userStorage[0].api_expired) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: API Key Expired :x:')
+                            .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        content: '',
+                        ephemeral: true
+                    });
+                }
+
                 if (keyCheck.length === 0) {
                     return await interaction.reply({
                         embeds: [
@@ -261,6 +287,19 @@
                     });
                 }
 
+                if (userStorage[0].api_expired) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: API Key Expired :x:')
+                            .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        content: '',
+                        ephemeral: true
+                    });
+                }
+
                 const [script, scriptRows] = await con.query(`SELECT * FROM script_storage WHERE script_id = '${scriptId}' AND script_apiowner = '${userStorage[0].api_key}'`);
 
                 if (script.length === 0) {
@@ -322,6 +361,34 @@
                             .setDescription(`**Woops, it looks like you have not yet linked an API key to your account.**\n*Please contact support if you think this is wrong.*`)
                             .setColor(ee.errorColor)
                         ],
+                        ephemeral: true
+                    });
+                }
+
+                if (userStorage[0].api_expirytime < Date.now() && !userStorage[0].api_expired) {
+                    await con.query(`UPDATE user_storage SET api_expired = 1 WHERE discord_connecteduser = '${interaction.user.id}'`);
+    
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: API Key Expired :x:')
+                            .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        content: '',
+                        ephemeral: true
+                    });
+                }
+
+                if (userStorage[0].api_expired) {
+                    return await interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(':x: API Key Expired :x:')
+                            .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                            .setColor(ee.errorColor)
+                        ],
+                        content: '',
                         ephemeral: true
                     });
                 }

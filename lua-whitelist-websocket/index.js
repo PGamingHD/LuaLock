@@ -33,6 +33,8 @@ wss.on('connection', (executor, req) => {
 
             if (keyCheck.length === 0) {
                 return executor.send('INVALIDSCRIPTAUTHENTICATIONKEY');
+            } else if (keyCheck[0].api_expired) {
+                return executor.send('EXPIREDAPIKEYOWNER');
             } else {
                 return executor.send('VALIDSCRIPTANDAUTHENTICATIONKEY');
             }

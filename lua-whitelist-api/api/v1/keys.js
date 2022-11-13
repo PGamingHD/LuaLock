@@ -25,6 +25,20 @@ apiRouter.get("/:api_key/details", async (req, res, next) => {
             "message": "Invalid API Key.",
         });
     } else {
+        if (foundKey[0].api_expirytime < Date.now() && !foundKey[0].api_expired) {
+            await pool.query(`UPDATE user_storage SET api_expired = 1 WHERE api_key = '${apiKey}'`);
+    
+            return res.status(401).json({
+                "message": "API Key expired."
+            });
+        }
+
+        if (foundKey[0].api_expired) {
+            return res.status(401).json({
+                "message": "API Key expired."
+            });
+        }
+
         const apiKey = foundKey[0];
 
         res.status(200).json({

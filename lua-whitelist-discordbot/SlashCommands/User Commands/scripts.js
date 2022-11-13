@@ -41,6 +41,34 @@ module.exports = {
             });
         }
 
+        if (apiOwner[0].api_expirytime < Date.now() && !apiOwner[0].api_expired) {
+            await con.query(`UPDATE user_storage SET api_expired = 1 WHERE discord_connecteduser = '${interaction.user.id}'`);
+
+            return await interaction.reply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(':x: API Key Expired :x:')
+                    .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                    .setColor(ee.errorColor)
+                ],
+                content: '',
+                ephemeral: true
+            });
+        }
+
+        if (apiOwner[0].api_expired) {
+            return await interaction.reply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(':x: API Key Expired :x:')
+                    .setDescription(`**Woops, it looks like your Linked API Key has expired, please renew it asap.**\n*Please contact support if you think this is wrong.*`)
+                    .setColor(ee.errorColor)
+                ],
+                content: '',
+                ephemeral: true
+            });
+        }
+
         const apiO = apiOwner[0];
 
         const [ownedScripts, ownedRows] = await con.query(`SELECT * FROM script_storage WHERE script_apiowner = '${apiO.api_key}'`);

@@ -33,6 +33,8 @@
 
             if (dbLevel.length === 0) {
                 apiLevel = "None"
+            } else if (dbLevel[0].api_expired) {
+                apiLevel = "Expired"
             } else if (dbLevel[0].api_type === 0) {
                 apiLevel = "Vip"
             } else if (dbLevel[0].api_type === 1) {
