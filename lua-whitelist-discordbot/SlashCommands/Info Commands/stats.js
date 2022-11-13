@@ -14,6 +14,7 @@
     module.exports = {
         name: 'stats',
         description: 'View your total LuaLock Stats',
+        commandCooldown: 15,
         /** 
          * @param {Client} client 
          * @param {Message} message 
