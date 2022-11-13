@@ -18,5 +18,5 @@ app.get('*', (req, res, next) => {
 
 app.listen(8080, async () => {
     await getPool().getConnection().then(console.log(chalk.green("[DATABASE] <==> || Successfully established a connection to the MYSQL Database Pool! || <==> [DATABASE]")));
-    console.log(chalk.green(`[SERVER] <==> || Server has been initiated and put up for PORT 3000! || <==> [SERVER]`));
+    console.log(chalk.green(`[SERVER] <==> || Server has been initiated and put up for PORT 8080! || <==> [SERVER]`));
 });

@@ -12,6 +12,7 @@ const loaderLimiter = rateLimit({
 
 apiRouter.use('/loader/:script_id/:script_key', loaderLimiter);
 apiRouter.get("/loader/:script_id/:script_key", async (req, res, next) => {
+    return console.log("SOMEONE TRIED TO ACCESS DEPRECATED LOADER/AUTH ENDPOINT!");
     const scriptId = req.params.script_id;
     const authkey = req.params.script_key;
     const synHeader = req.get('Syn-User-Identifier');
