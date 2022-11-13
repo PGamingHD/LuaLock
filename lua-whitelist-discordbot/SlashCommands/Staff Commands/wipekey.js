@@ -16,7 +16,7 @@
         name: 'wipekey',
         description: 'Wipe a key from the database, has rules been broken with this key?',
         DeveloperCommand: true,
-        commandCooldown: 15,
+        commandCooldown: 5,
         options: [{
             name: 'apikey',
             description: 'The API Key you want to remove from the Database',

@@ -210,7 +210,7 @@ end);`
     or internal logic will result in a global ban, and get you blacklisted from future
                script executions that has been licensed with Lualock.
                     
-                   LuaLock v1 for Roblox, made by PGamingHD#0666
+                   LuaLock v1.1 for Roblox, made by PGamingHD#0666
                               https://lualock.com/
 
             

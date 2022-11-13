@@ -12,7 +12,7 @@
         name: 'getapi',
         description: 'Get some API information.',
         DeveloperCommand: true,
-        commandCooldown: 15,
+        commandCooldown: 5,
         /**
          * @param {Client} client 
          * @param {Message} message 
