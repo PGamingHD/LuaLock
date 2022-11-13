@@ -11,9 +11,9 @@ wait(0.5);
 local Websocket = nil;
 
 if syn then
-    Websocket = syn.websocket.connect("ws://localhost:8888");
+    Websocket = syn.websocket.connect("ws://138.201.137.59:8888");
 elseif KRNL_LOADED then
-    Websocket = Krnl.WebSocket.connect("ws://localhost:8888");
+    Websocket = Krnl.WebSocket.connect("ws://138.201.137.59:8888");
 end
 
 wait(0.5);
