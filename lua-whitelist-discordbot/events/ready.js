@@ -22,6 +22,10 @@ client.on("ready", async (client) => {
         client.user.setActivity('Lualock Services', {
             type: ActivityType.Watching
         });
+
+        Cron('0 0 */1 * * *', async () => {
+            await client.connection.query(`SELECT 1`);
+        });
     } catch (e) {
         console.log(String(e.stack))
     }

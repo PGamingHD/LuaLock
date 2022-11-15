@@ -62,7 +62,9 @@ Websocket.OnMessage:Connect(function(Msg)
     elseif Msg == "RECIEVEDHEARTBEATSUCCESS" then
         print("[LuaLock]: > Recieved Heartbeat... < :[LuaLock]");
     else
-        loadstring(Msg)(); -- MAKE A while wait(300) do LOOP, FOR EVERY 5 MIN RECHECK FOR POSSIBLE AUTH CHANGES!
+        loadstring(Msg)();
+
+        print("[LuaLock]: > Script was successfully executed! < :[LuaLock]")
 
         while wait(300) do
             Websocket:Send("REQUESTINGHEARTBEATRN," ..script_key.. "," ..scriptId);
