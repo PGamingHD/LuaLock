@@ -64,7 +64,7 @@ Websocket.OnMessage:Connect(function(Msg)
     else
         loadstring(Msg)();
 
-        print("[LuaLock]: > Script was successfully executed! < :[LuaLock]")
+        print("[LuaLock]: > Script was successfully executed! < :[LuaLock]");
 
         while wait(300) do
             Websocket:Send("REQUESTINGHEARTBEATRN," ..script_key.. "," ..scriptId);
