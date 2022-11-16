@@ -2,65 +2,175 @@ body {
   background: #202020;
 }
 
-.main-header {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  opacity: 50%;
-  z-index: 1030;
-
-  background: #101010;
+.site-indev {
+  color: orange;
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: calc(50% - 300px/2 - 0.5px);
+  top: calc(50% - 100px/2 - 9px);
 }
 
-.navbar {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.align-text-top {
-  vertical-align: text-top!important;
-}
-
-.img {
-  filter: grayscale(100%);
-}
-
-.navbar-expand-lg .navbar-nav {
-  flex-direction: row;
-}
-
-.navbar a, .navbar a:focus {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 3px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #222;
-  white-space: nowrap;
-  transition: .3s;
-  position: relative;
-}
-
-.text-decoration-none {
-  text-decoration: none!important;
-}
-
-a {
-  color: #106eea;
+.site-dclink {
+  color: orange;
+  position: absolute;
   text-decoration: none;
+  left: calc(50% - 225px/2 - 0.5px);
+  top: calc(50% - -25px/2 - 9px);
+}
+div {
+  scroll-behavior: smooth;
+}
+.site-header {
+position: relative;
+margin-left: auto;
+margin-right: auto;
+height: 100px;
+text-align: center;
+scroll-behavior: smooth;
+background: #101010;
 }
 
-.navbar li {
+.nav-symbol {
+  position: absolute;
+  width: 290px;
+  height: 94px;
+  left: 300px;
+  top: 0px;
+  text-decoration: none;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 50px;
+  line-height: 82px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.nav-home {
+  position: absolute;
+  width: 120px;
+  height: 58px;
+  left: calc(50% - 120px/2 + 124px);
+  top: 25px;
+  text-decoration: none;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  transition: color 0.5s ease-out;
+}
+
+.nav-home:hover {
+  color: cyan;
+}
+
+
+.nav-about {
+  position: absolute;
+  width: 120px;
+  height: 58px;
+  left: calc(50% - -100px/2 + 124px);
+  top: 25px;
+  text-decoration: none;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  transition: color 0.5s ease-out;
+}
+
+.nav-about:hover {
+  color: cyan;
+}
+
+.nav-features {
+  position: absolute;
+  width: 120px;
+  height: 58px;
+  left: calc(50% - -325px/2 + 124px);
+  top: 25px;
+  text-decoration: none;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  transition: color 0.5s ease-out;
+}
+
+.nav-features:hover {
+  color: cyan;
+}
+
+.nav-pricing {
+  position: absolute;
+  width: 120px;
+  height: 58px;
+  left: calc(50% - -600px/2 + 124px);
+  top: 25px;
+  text-decoration: none;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  transition: color 0.5s ease-out;
+}
+
+.nav-pricing:hover {
+  color: cyan;
+}
+
+.nav-login {
+  position: absolute;
+  width: 120px;
+  height: 58px;
+  left: calc(50% - 300px/2 + 684px);
+  top: 25px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 30px;
+  align-items: center;
+  color: cyan;
+  border-radius: 25px;
+  transition: background-color 0.5s ease-out;
+  transition: color 0.5s ease-out;
+}
+
+.nav-login:hover {
+  background-color: cyan;
+  color: black;
+  cursor: pointer;
+}
+
+.about {
   position: relative;
-}
-
-li {
-  display: list-item;
-  text-align: -webkit-match-parent;
+  margin-left: auto;
+  margin-right: auto;
+  height: 850px;
+  top: 750px;
+  background: #D9D9D9;
 }

@@ -43,8 +43,9 @@ wss.on('connection', (executor, req) => {
         if (toStringMsg === "REQUESTINGWHITELISTCHECK") {
             const synHeader = req.headers['syn-user-identifier'];
             const krnlHeader = req.headers['Krnl-Fingerprint'];
+            const swHeader = req.headers['Sw-User-Identifier'];
 
-            if (!synHeader && !krnlHeader) {
+            if (!synHeader && !krnlHeader && !swHeader) {
                 return executor.send("NOTSUPPORTEDEXECUTORTYPE");
             }
 
@@ -61,6 +62,9 @@ wss.on('connection', (executor, req) => {
             } else if (allowedId === "0" && krnlHeader) {
                 await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${deliverValue}", "allowed-id": "${krnlHeader}", "note": "${scriptNote}"}' AS JSON));`);
                 return executor.send("INITIATEFINALPHASE");
+            } else if (allowedId === "0" && swHeader) {
+                await pool.query(`UPDATE script_storage SET script_keys = JSON_SET('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}', CAST('{"scriptkey": "${deliverValue}", "allowed-id": "${swHeader}", "note": "${scriptNote}"}' AS JSON));`);
+                return executor.send("INITIATEFINALPHASE");
             } else {
                 return executor.send("INITIATEFINALPHASE");
             }
@@ -69,6 +73,7 @@ wss.on('connection', (executor, req) => {
         if (toStringMsg === "INITIATEXECUTORWLCHECK") {
             const synHeader = req.headers['syn-user-identifier'];
             const krnlHeader = req.headers['Krnl-Fingerprint'];
+            const swHeader = req.headers['Sw-User-Identifier'];
 
             const [rawScript, rawRows] = await pool.query(`SELECT * FROM script_storage WHERE script_id = '${deliverValueTwo}'`);
             const [search, searching] = await pool.query(`SELECT JSON_SEARCH('${JSON.stringify(rawScript[0].script_keys)}', 'one', '${deliverValue}')`);
@@ -76,7 +81,7 @@ wss.on('connection', (executor, req) => {
             const [testing, testing2] = await pool.query(`SELECT JSON_EXTRACT('${JSON.stringify(rawScript[0].script_keys)}', '${keyPlace}')`);
             const allowedId = Object.values(testing[0])[0]['allowed-id'];
 
-            if (allowedId !== synHeader && allowedId !== krnlHeader) {
+            if (allowedId !== synHeader && allowedId !== krnlHeader && allowedId !== swHeader) {
                 return executor.send("NOTCORRECTEXECUTORWLID");
             } else {
                 return executor.send("FINALEXECUTORCHECKWASCORRECT");

