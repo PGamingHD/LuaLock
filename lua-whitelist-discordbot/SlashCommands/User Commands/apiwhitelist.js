@@ -151,11 +151,11 @@
                     });
                 }
 
-                const postIp = await axios.post("https://api.cloudflare.com/client/v4/accounts/f746d867dfe1e554d8a2945486da38f4/rules/lists/45cc043a30df4d12b2bdad285a164c41/items", data, {
+                const postIp = await axios.post("REMOVED", data, {
                     headers: {
                         'content-type': 'application/json',
                         'X-Auth-Email': 'pontus.2003@hotmail.com',
-                        'Authorization': 'Bearer 0xFlHS9zMn6B1oDPiOnD95lfQbVeGGpf6uFmtisM'
+                        'Authorization': 'Bearer'
                     }
                 });
 
