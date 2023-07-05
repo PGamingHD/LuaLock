@@ -9,8 +9,6 @@
    "Discord_Dashboard": {
       "Redirect_URI": "http://localhost/discord/callback",
       "Redirect_CLIENTID": "1006527071973032006",
-      "Redirect_CLIENTSECRET": "xQGslfGocQXLJKrJXGLRG2zKs8PKZP0c",
-      "Dashboard_license": "07c8588f-3848-4b37-861f-9386898839ba"
    },
    "Discord_Links": {
       "Support_Server": "https://discord.gg/comingsoon",
