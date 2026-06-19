@@ -1,0 +1,52 @@
+body {
+  background: #202020;
+}
+
+.Error-bg {
+  position: absolute;
+  width: 601px;
+  height: 271px;
+  left: calc(50% - 601px/2 - 0.5px);
+  top: calc(50% - 271px/2 - 9px);
+  
+  background: #101010;
+  border-radius: 10px;
+}
+
+.Error-title {
+  position: absolute;
+  width: 108px;
+  height: 72px;
+  left: calc(50% - 108px/2);
+  top: calc(50% - 150px/2 - 26.5px);
+  
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 61px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  
+  color: #FFFFFF;
+}
+
+.Error-desc {
+  position: absolute;
+  width: 323px;
+  height: 18px;
+  left: calc(50% - 323px/2 - 0.5px);
+  top: calc(50% - 18px/2 + 18.5px);
+  
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  
+  color: #FFFFFF;
+}
